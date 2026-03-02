@@ -157,9 +157,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Context & External Data ---
     async function initWeatherAndTime() {
-        // 1. Check time: After 18:00
+        // 1. Check time: After 20:00
         const now = new Date();
-        const isNight = now.getHours() >= 18 || now.getHours() < 6;
+        const isNight = now.getHours() >= 20 || now.getHours() < 6;
         currentContext.isNight = isNight;
 
         // 2. Local weather via Open-Meteo

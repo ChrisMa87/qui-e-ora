@@ -142,6 +142,9 @@ button {
     background: none;
     cursor: pointer;
     outline: none;
+    pointer-events: auto;
+    z-index: 50;
+    position: relative;
 }
 
 .btn-primary {
