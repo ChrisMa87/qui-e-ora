@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Qui e Ora</title>
+
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#a0c4ff">
+    <link rel="apple-touch-icon" href="./icon-192.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+
+    <!-- App Container -->
+    <div id="app-container">
+
+        <!-- Floating Button for Brain Dump -->
+        <button id="btn-fab-dump" class="fab fade-up" aria-label="Aggiungi">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+        </button>
+
+        <!-- VIEW 1: TIME SELECTION -->
+        <section id="view-time" class="view active">
+            <div class="content-wrapper centered">
+                <h1 class="title-text fade-up">Quanto tempo hai?</h1>
+
+                <div class="slider-container fade-up delay-1">
+                    <input type="range" id="time-slider" min="0" max="4" value="2" step="1">
+                    <div class="slider-labels">
+                        <span>5m</span>
+                        <span>15m</span>
+                        <span>30m</span>
+                        <span>60m+</span>
+                        <span>∞</span>
+                    </div>
+                </div>
+
+                <button id="btn-start" class="btn-primary fade-up delay-2">Inizia</button>
+            </div>
+        </section>
+
+        <!-- VIEW 2: FOCUS MODE -->
+        <section id="view-focus" class="view">
+            <button id="btn-back-time" class="top-left-btn fade-up" aria-label="Indietro">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+            </button>
+
+            <div class="content-wrapper centered">
+                <div id="focus-content">
+                    <h2 id="focus-task-title" class="task-title fade-up">...</h2>
+                    <div class="task-meta fade-up delay-1">
+                        <span id="focus-task-time" class="badge"></span>
+                        <span id="focus-task-tags" class="badge"></span>
+                    </div>
+
+                    <div class="action-buttons fade-up delay-2">
+                        <button id="btn-done" class="btn-primary">Fatto!</button>
+                        <button id="btn-later" class="btn-secondary">Più tardi</button>
+                    </div>
+                </div>
+
+                <div id="focus-empty" class="hidden fade-up">
+                    <p class="title-text" style="font-size:1.5rem">Nessuna attività trovata per questo contesto.</p>
+                    <button id="btn-empty-back" class="btn-secondary mt-4">Indietro</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 3: BRAIN DUMP -->
+        <section id="view-dump" class="view">
+            <button id="btn-close-dump" class="top-left-btn fade-up" aria-label="Chiudi">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+
+            <div class="content-wrapper align-start">
+                <h1 class="dump-title fade-up">Cosa c'è nella tua testa?</h1>
+
+                <div class="fade-up delay-1" style="width: 100%;">
+                    <input type="text" id="dump-input" class="minimal-input" placeholder="es. Lettura [30m] #relax"
+                        autocomplete="off" spellcheck="false">
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <div id="toast" class="toast">Salvato.</div>
+
+    <script src="./app.js"></script>
+
+    <!-- Register Service Worker -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then((registration) => {
+                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                    })
+                    .catch((err) => {
+                        console.error('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+    </script>
+</body>
+
+</html>
