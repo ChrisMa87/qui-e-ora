@@ -18,12 +18,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const dumpTimeLabel = document.getElementById('dump-time-label');
     const dumpOutdoorToggle = document.getElementById('dump-outdoor-toggle');
     const btnSaveDump = document.getElementById('btn-save-dump');
+    const btnCancelDump = document.getElementById('btn-cancel-dump');
 
     // Values map for the new dump slider
     const dumpTimeMapping = [5, 15, 30, 45, 60, Infinity];
 
     const timeSlider = document.getElementById('time-slider');
     const btnStart = document.getElementById('btn-start');
+    const btnAddTask = document.getElementById('btn-add-task');
 
     const btnBackTime = document.getElementById('btn-back-time');
     const btnEmptyBack = document.getElementById('btn-empty-back');
@@ -41,6 +43,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Initial Setup ---
     initWeatherAndTime();
+
+    // Auto-start in Brain Dump mode if there are no tasks stored
+    if (tasks.length === 0) {
+        // We use a tiny timeout to let the DOM settle so the CSS transition works nicely
+        setTimeout(() => switchView(viewDump), 50);
+    }
 
     // --- View Transitions ---
     function switchView(toView) {
@@ -60,7 +68,28 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => dumpInput.focus(), 600); // Focus input after fade transition
     });
 
-    btnCloseDump.addEventListener('click', () => switchView(viewTime));
+    btnAddTask.addEventListener('click', () => {
+        switchView(viewDump);
+        setTimeout(() => dumpInput.focus(), 600);
+    });
+
+    function clearDumpInputs() {
+        dumpInput.value = '';
+        dumpTimeSlider.value = 2; // Default 30m
+        dumpTimeLabel.textContent = 'Dauer: 30 min';
+        dumpOutdoorToggle.checked = false;
+    }
+
+    btnCloseDump.addEventListener('click', () => {
+        clearDumpInputs();
+        switchView(viewTime);
+    });
+
+    btnCancelDump.addEventListener('click', () => {
+        clearDumpInputs();
+        switchView(viewTime);
+    });
+
     btnBackTime.addEventListener('click', () => switchView(viewTime));
     btnEmptyBack.addEventListener('click', () => switchView(viewTime));
 
@@ -97,13 +126,15 @@ document.addEventListener('DOMContentLoaded', () => {
         tasks.push(newTask);
         saveTasks();
 
-        // Reset inputs
-        dumpInput.value = '';
-        dumpTimeSlider.value = 2; // Default 30m
-        dumpTimeLabel.textContent = 'Dauer: 30 min';
-        dumpOutdoorToggle.checked = false;
+        clearDumpInputs();
 
         showToast('Attività salvata.');
+
+        // After saving, switch to the home view so they can use the selection wheel
+        // We do a small delay to let them see the toast
+        setTimeout(() => {
+            switchView(viewTime);
+        }, 1000);
     }
 
     btnSaveDump.addEventListener('click', handleSaveDump);
