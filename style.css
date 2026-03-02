@@ -1,11 +1,11 @@
 :root {
-    --bg-color: #fafbfc;
-    --text-primary: #1a202c;
-    --text-secondary: #718096;
+    --bg-color: #0d1117;
+    --text-primary: #e6edf3;
+    --text-secondary: #7d8590;
     --accent-color: #a0c4ff;
-    --accent-hover: #8ab6ff;
-    --accent-faded: rgba(160, 196, 255, 0.2);
-    --white: #ffffff;
+    --accent-hover: #b6d3ff;
+    --accent-faded: rgba(160, 196, 255, 0.15);
+    --white: #161b22;
     --transition-speed: 0.6s;
     --font-main: 'Outfit', sans-serif;
 }
@@ -114,17 +114,18 @@ input[type=range]::-webkit-slider-thumb {
     height: 24px;
     width: 24px;
     border-radius: 50%;
-    background: var(--accent-color);
+    background: var(--text-primary);
     cursor: pointer;
     -webkit-appearance: none;
     appearance: none;
     margin-top: -10px;
-    box-shadow: 0 4px 12px rgba(160, 196, 255, 0.4);
-    transition: transform 0.2s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease, background 0.3s ease;
 }
 
 input[type=range]::-webkit-slider-thumb:hover {
     transform: scale(1.15);
+    background: var(--accent-color);
 }
 
 .slider-labels {
@@ -148,21 +149,24 @@ button {
 }
 
 .btn-primary {
-    background-color: var(--accent-color);
-    color: var(--white);
+    background-color: var(--white);
+    color: var(--text-primary);
     padding: 1rem 3rem;
     border-radius: 999px;
     font-size: 1.1rem;
     font-weight: 500;
     letter-spacing: 0.05em;
-    box-shadow: 0 8px 24px rgba(160, 196, 255, 0.3);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .btn-primary:hover {
-    background-color: var(--accent-hover);
+    background-color: var(--accent-color);
+    color: #0d1117;
     transform: translateY(-2px);
-    box-shadow: 0 12px 28px rgba(160, 196, 255, 0.4);
+    box-shadow: 0 12px 28px rgba(160, 196, 255, 0.2);
+    border-color: transparent;
 }
 
 .btn-secondary {
@@ -279,8 +283,8 @@ button {
     bottom: 2rem;
     left: 50%;
     transform: translateX(-50%) translateY(20px);
-    background-color: var(--text-primary);
-    color: var(--white);
+    background-color: var(--white);
+    color: var(--text-primary);
     padding: 0.75rem 1.5rem;
     border-radius: 999px;
     font-size: 0.9rem;
@@ -288,6 +292,8 @@ button {
     pointer-events: none;
     transition: all 0.4s ease;
     z-index: 1000;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .toast.show {
@@ -352,10 +358,10 @@ button {
     width: 20px;
     left: 4px;
     bottom: 4px;
-    background-color: var(--white);
+    background-color: var(--text-primary);
     transition: .4s;
     border-radius: 50%;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
 }
 
 input:checked+.slider.round {
@@ -364,4 +370,5 @@ input:checked+.slider.round {
 
 input:checked+.slider.round:before {
     transform: translateX(22px);
+    background-color: #0d1117;
 }
