@@ -14,6 +14,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnFabDump = document.getElementById('btn-fab-dump');
     const btnCloseDump = document.getElementById('btn-close-dump');
     const dumpInput = document.getElementById('dump-input');
+    const dumpTimeSlider = document.getElementById('dump-time-slider');
+    const dumpTimeLabel = document.getElementById('dump-time-label');
+    const dumpOutdoorToggle = document.getElementById('dump-outdoor-toggle');
+    const btnSaveDump = document.getElementById('btn-save-dump');
+
+    // Values map for the new dump slider
+    const dumpTimeMapping = [5, 15, 30, 45, 60, Infinity];
 
     const timeSlider = document.getElementById('time-slider');
     const btnStart = document.getElementById('btn-start');
@@ -58,55 +65,54 @@ document.addEventListener('DOMContentLoaded', () => {
     btnEmptyBack.addEventListener('click', () => switchView(viewTime));
 
     // --- Brain Dump Logic ---
-    dumpInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-            const text = dumpInput.value.trim();
-            if (!text) return;
 
-            const parsedTask = parseTaskInput(text);
-            if (parsedTask) {
-                tasks.push(parsedTask);
-                saveTasks();
-
-                dumpInput.value = '';
-                showToast('Attività salvata.');
-            }
-        }
+    // Update label when slider moves
+    dumpTimeSlider.addEventListener('input', (e) => {
+        const valIndex = parseInt(e.target.value, 10);
+        const mins = dumpTimeMapping[valIndex];
+        dumpTimeLabel.textContent = mins === Infinity ? "Dauer: ∞" : `Dauer: ${mins} min`;
     });
 
-    function parseTaskInput(input) {
-        // Looks for duration pattern: e.g. [30m] or [∞]
-        const durRegex = /\[(\d+m|∞)\]/i;
-        // Looks for tag pattern: e.g. #outdoor or #relax
-        const tagRegex = /#(\w+)/g;
+    // Save action
+    function handleSaveDump() {
+        const title = dumpInput.value.trim().replace(/\s+/g, ' ');
+        if (!title) return;
 
-        const durMatch = input.match(durRegex);
-        let duration = Infinity; // Infinite is default if nothing found
-        if (durMatch) {
-            if (durMatch[1] === '∞') duration = Infinity;
-            else duration = parseInt(durMatch[1].replace('m', ''), 10);
-        }
+        const valIndex = parseInt(dumpTimeSlider.value, 10);
+        const duration = dumpTimeMapping[valIndex];
+        const isOutdoor = dumpOutdoorToggle.checked;
 
         const tags = [];
-        let tagMatch;
-        while ((tagMatch = tagRegex.exec(input)) !== null) {
-            tags.push(tagMatch[1].toLowerCase());
+        if (isOutdoor) {
+            tags.push('allaperto', 'outdoor');
         }
 
-        // Clean up title by removing tags and durations
-        let title = input.replace(durRegex, '').replace(tagRegex, '').trim();
-        // Reduce multiple spaces
-        title = title.replace(/\s+/g, ' ');
-
-        if (!title) return null;
-
-        return {
+        const newTask = {
             id: Date.now().toString(),
             title,
             duration,
             tags
         };
+
+        tasks.push(newTask);
+        saveTasks();
+
+        // Reset inputs
+        dumpInput.value = '';
+        dumpTimeSlider.value = 2; // Default 30m
+        dumpTimeLabel.textContent = 'Dauer: 30 min';
+        dumpOutdoorToggle.checked = false;
+
+        showToast('Attività salvata.');
     }
+
+    btnSaveDump.addEventListener('click', handleSaveDump);
+
+    dumpInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            handleSaveDump();
+        }
+    });
 
     function saveTasks() {
         localStorage.setItem('quiora_tasks', JSON.stringify(tasks));

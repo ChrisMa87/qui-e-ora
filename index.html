@@ -95,9 +95,37 @@
             <div class="content-wrapper align-start">
                 <h1 class="dump-title fade-up">Cosa c'è nella tua testa?</h1>
 
-                <div class="fade-up delay-1" style="width: 100%;">
-                    <input type="text" id="dump-input" class="minimal-input" placeholder="es. Lettura [30m] #relax"
+                <div class="fade-up delay-1" style="width: 100%; margin-bottom: 3rem;">
+                    <input type="text" id="dump-input" class="minimal-input" placeholder="es. Leggere un libro"
                         autocomplete="off" spellcheck="false">
+                </div>
+
+                <div class="slider-container fade-up delay-2">
+                    <p id="dump-time-label"
+                        style="text-align: center; color: var(--text-secondary); margin-bottom: 0.5rem;">Dauer: 30 min
+                    </p>
+                    <input type="range" id="dump-time-slider" min="0" max="5" value="2" step="1">
+                    <div class="slider-labels">
+                        <span>5m</span>
+                        <span>15m</span>
+                        <span>30m</span>
+                        <span>45m</span>
+                        <span>60m</span>
+                        <span>∞</span>
+                    </div>
+                </div>
+
+                <div class="toggle-container fade-up delay-2"
+                    style="margin-top: 2rem; display: flex; align-items: center; justify-content: center; gap: 1rem;">
+                    <label for="dump-outdoor-toggle" style="color: var(--text-secondary);">Attività all'aperto?</label>
+                    <label class="switch">
+                        <input type="checkbox" id="dump-outdoor-toggle">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+
+                <div style="text-align: center; margin-top: 4rem;">
+                    <button id="btn-save-dump" class="btn-primary fade-up delay-2">Salva</button>
                 </div>
             </div>
         </section>
