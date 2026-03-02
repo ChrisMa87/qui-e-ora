@@ -48,12 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Initial Setup ---
     initWeatherAndTime();
 
-    // Auto-start in Brain Dump mode if there are no tasks stored
-    if (tasks.length === 0) {
-        // We use a tiny timeout to let the DOM settle so the CSS transition works nicely
-        setTimeout(() => switchView(viewDump), 50);
-    }
-
     // --- View Transitions ---
     function switchView(toView) {
         [viewTime, viewFocus, viewDump, viewList].forEach(v => v.classList.remove('active'));

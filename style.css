@@ -1,11 +1,11 @@
 :root {
-    --bg-color: #0d1117;
-    --text-primary: #e6edf3;
-    --text-secondary: #7d8590;
-    --accent-color: #a0c4ff;
-    --accent-hover: #b6d3ff;
-    --accent-faded: rgba(160, 196, 255, 0.15);
-    --white: #161b22;
+    --bg-color: #050505;
+    --text-primary: #f0f0f0;
+    --text-secondary: #888888;
+    --accent-color: #8ab6ff;
+    --accent-hover: #a0c4ff;
+    --accent-faded: rgba(138, 182, 255, 0.15);
+    --white: #111111;
     --transition-speed: 0.6s;
     --font-main: 'Outfit', sans-serif;
 }
@@ -89,6 +89,8 @@ body {
     width: 100%;
     max-width: 320px;
     margin-bottom: 4rem;
+    position: relative;
+    z-index: 10;
 }
 
 input[type=range] {
@@ -163,10 +165,10 @@ button {
 }
 
 .btn-primary:hover {
-    background-color: var(--accent-color);
-    color: #0d1117;
+    background-color: var(--accent-hover);
+    color: #050505;
     transform: translateY(-2px);
-    box-shadow: 0 12px 28px rgba(160, 196, 255, 0.2);
+    box-shadow: 0 12px 28px rgba(138, 182, 255, 0.2);
     border-color: transparent;
 }
 
@@ -371,7 +373,7 @@ input:checked+.slider.round {
 
 input:checked+.slider.round:before {
     transform: translateX(22px);
-    background-color: #0d1117;
+    background-color: #050505;
 }
 
 /* Task List */
