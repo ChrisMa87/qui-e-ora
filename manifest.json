@@ -1,21 +1,28 @@
 {
   "name": "Qui e Ora",
   "short_name": "QuiOra",
-  "description": "Minimalist, stress-reducing focus app that respects your time and context.",
-  "start_url": "/index.html",
+  "description": "Minimalist Task Manager",
+  "orientation": "portrait",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#a0c4ff",
   "icons": [
     {
-      "src": "icon-192.png",
+      "src": "./icon-192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "icon-512.png",
+      "src": "./icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3106/3106856.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
