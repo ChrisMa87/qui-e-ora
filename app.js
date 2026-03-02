@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const viewTime = document.getElementById('view-time');
     const viewFocus = document.getElementById('view-focus');
     const viewDump = document.getElementById('view-dump');
+    const viewList = document.getElementById('view-list');
 
     const btnFabDump = document.getElementById('btn-fab-dump');
     const btnCloseDump = document.getElementById('btn-close-dump');
@@ -26,6 +27,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const timeSlider = document.getElementById('time-slider');
     const btnStart = document.getElementById('btn-start');
     const btnAddTask = document.getElementById('btn-add-task');
+    const btnViewList = document.getElementById('btn-view-list');
+    const btnCloseList = document.getElementById('btn-close-list');
+    const taskListContainer = document.getElementById('task-list-container');
 
     const btnBackTime = document.getElementById('btn-back-time');
     const btnEmptyBack = document.getElementById('btn-empty-back');
@@ -52,11 +56,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- View Transitions ---
     function switchView(toView) {
-        [viewTime, viewFocus, viewDump].forEach(v => v.classList.remove('active'));
+        [viewTime, viewFocus, viewDump, viewList].forEach(v => v.classList.remove('active'));
         toView.classList.add('active');
 
         // Manage FAB visibility based on view
-        if (toView === viewDump || toView === viewFocus) {
+        if (toView === viewDump || toView === viewFocus || toView === viewList) {
             btnFabDump.classList.add('hidden');
         } else {
             btnFabDump.classList.remove('hidden');
@@ -72,6 +76,13 @@ document.addEventListener('DOMContentLoaded', () => {
         switchView(viewDump);
         setTimeout(() => dumpInput.focus(), 600);
     });
+
+    btnViewList.addEventListener('click', () => {
+        renderTaskList();
+        switchView(viewList);
+    });
+
+    btnCloseList.addEventListener('click', () => switchView(viewTime));
 
     function clearDumpInputs() {
         dumpInput.value = '';
@@ -144,6 +155,106 @@ document.addEventListener('DOMContentLoaded', () => {
             handleSaveDump();
         }
     });
+
+    // --- Task List Logic ---
+    function renderTaskList() {
+        taskListContainer.innerHTML = '';
+        if (tasks.length === 0) {
+            taskListContainer.innerHTML = '<p style="text-align: center; color: var(--text-secondary); margin-top: 2rem;">Nessuna attività trovata.</p>';
+            return;
+        }
+
+        tasks.forEach((task, index) => {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'list-item-wrapper fade-up';
+            wrapper.style.transitionDelay = `${index * 0.05}s`;
+
+            const bg = document.createElement('div');
+            bg.className = 'list-item-delete-bg';
+            bg.textContent = 'Elimina';
+
+            const item = document.createElement('div');
+            item.className = 'list-item';
+
+            let tagsHtml = '';
+            if (task.tags && task.tags.length > 0) {
+                tagsHtml = `<span style="color: var(--text-primary); border: 1px solid var(--accent-faded); padding: 2px 8px; border-radius: 999px; font-size: 0.8rem;">#${task.tags.join(' #')}</span>`;
+            }
+
+            const durText = task.duration === Infinity ? '∞' : `${task.duration}m`;
+
+            item.innerHTML = `
+                <div class="list-item-content">
+                    <div class="list-item-title">${task.title}</div>
+                    <div class="list-item-meta">
+                        <span>⏱ ${durText}</span>
+                        ${tagsHtml}
+                    </div>
+                </div>
+            `;
+
+            wrapper.appendChild(bg);
+            wrapper.appendChild(item);
+            taskListContainer.appendChild(wrapper);
+
+            // Swipe logic
+            let startX = 0;
+            let currentX = 0;
+            let isSwiping = false;
+
+            item.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].clientX;
+                isSwiping = true;
+                item.classList.add('swiping');
+            }, { passive: true });
+
+            item.addEventListener('touchmove', (e) => {
+                if (!isSwiping) return;
+                const touch = e.touches[0];
+                currentX = touch.clientX - startX;
+
+                // Only allow right-to-left swipe (negative X)
+                if (currentX > 0) currentX = 0;
+
+                item.style.transform = `translateX(${currentX}px)`;
+            }, { passive: true });
+
+            item.addEventListener('touchend', (e) => {
+                if (!isSwiping) return;
+                isSwiping = false;
+                item.classList.remove('swiping');
+
+                // If swiped more than 100px left, delete
+                if (currentX < -100) {
+                    item.style.transform = `translateX(-100%)`; // Slide completely out
+
+                    // Remove from array and DOM
+                    setTimeout(() => {
+                        tasks.splice(index, 1);
+                        saveTasks();
+                        renderTaskList(); // Re-render everything to update indices
+                        showToast('Attività eliminata.');
+
+                        if (tasks.length === 0) {
+                            setTimeout(() => switchView(viewTime), 1000);
+                        }
+                    }, 300);
+                } else {
+                    // Reset position
+                    item.style.transform = `translateX(0)`;
+                }
+            });
+        });
+
+        // Trigger reflow for animations
+        requestAnimationFrame(() => {
+            const items = taskListContainer.querySelectorAll('.list-item-wrapper');
+            items.forEach(el => {
+                el.style.opacity = '1';
+                el.style.transform = 'translateY(0)';
+            });
+        });
+    }
 
     function saveTasks() {
         localStorage.setItem('quiora_tasks', JSON.stringify(tasks));
