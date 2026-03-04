@@ -91,6 +91,12 @@ body {
     margin-bottom: 4rem;
     position: relative;
     z-index: 10;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 1.5rem;
 }
 
 input[type=range] {
@@ -98,7 +104,7 @@ input[type=range] {
     appearance: none;
     width: 100%;
     background: transparent;
-    margin: 15px 0;
+    margin: 5px 0;
 }
 
 input[type=range]:focus {
@@ -152,16 +158,18 @@ button {
 }
 
 .btn-primary {
-    background-color: var(--accent-color);
-    color: #000000;
+    background-color: rgba(197, 160, 89, 0.15);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    color: var(--accent-color);
     padding: 1rem 3rem;
     border-radius: 999px;
     font-size: 1.1rem;
     font-weight: 500;
     letter-spacing: 0.05em;
-    box-shadow: 0 8px 24px rgba(197, 160, 89, 0.2);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease;
-    border: 1px solid rgba(197, 160, 89, 0.1);
+    border: 1px solid rgba(197, 160, 89, 0.2);
 }
 
 .btn-primary:hover {
@@ -176,7 +184,12 @@ button {
     color: var(--text-secondary);
     padding: 1rem 2rem;
     font-size: 1.1rem;
-    transition: color 0.3s ease;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 999px;
 }
 
 .btn-secondary:hover {
@@ -194,7 +207,10 @@ button {
     width: 56px;
     height: 56px;
     border-radius: 50%;
-    background-color: var(--white);
+    background-color: rgba(197, 160, 89, 0.15);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(197, 160, 89, 0.2);
     color: var(--accent-color);
     display: flex;
     justify-content: center;
@@ -439,4 +455,28 @@ input:checked+.slider.round:before {
     display: flex;
     gap: 0.5rem;
     margin-top: 0.5rem;
+}
+
+/* Energy Pills */
+.energy-pill input {
+    display: none;
+}
+
+.energy-pill span {
+    padding: 0.6rem 1.2rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.energy-pill input:checked+span {
+    background: rgba(197, 160, 89, 0.15);
+    border-color: var(--accent-color);
+    color: var(--accent-color);
 }

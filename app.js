@@ -102,9 +102,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Update label when slider moves
     dumpTimeSlider.addEventListener('input', (e) => {
+        if ('vibrate' in navigator) navigator.vibrate(10);
         const valIndex = parseInt(e.target.value, 10);
         const mins = dumpTimeMapping[valIndex];
         dumpTimeLabel.textContent = mins === Infinity ? "Dauer: ∞" : `Dauer: ${mins} min`;
+    });
+
+    timeSlider.addEventListener('input', () => {
+        if ('vibrate' in navigator) navigator.vibrate(10);
     });
 
     // Save action
@@ -116,6 +121,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const duration = dumpTimeMapping[valIndex];
         const isOutdoor = dumpOutdoorToggle.checked;
 
+        const energyNode = document.querySelector('input[name="dump-energy"]:checked');
+        const energy = energyNode ? energyNode.value : 'medio';
+
         const tags = [];
         if (isOutdoor) {
             tags.push('allaperto', 'outdoor');
@@ -125,7 +133,8 @@ document.addEventListener('DOMContentLoaded', () => {
             id: Date.now().toString(),
             title,
             duration,
-            tags
+            tags,
+            energy
         };
 
         tasks.push(newTask);
@@ -260,12 +269,55 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => toast.classList.remove('show'), 3000);
     }
 
+    function renderEveningList() {
+        const eveningList = document.getElementById('evening-completed-list');
+        if (!eveningList) return;
+        const completedToday = JSON.parse(localStorage.getItem('quiora_completed_today')) || [];
+
+        eveningList.innerHTML = '';
+        if (completedToday.length === 0) {
+            eveningList.innerHTML = '<p style="text-align:center;">Nessuna attività completata oggi.</p>';
+        } else {
+            completedToday.forEach(t => {
+                const el = document.createElement('div');
+                el.style.padding = '0.5rem 0';
+                el.style.borderBottom = '1px solid rgba(255,255,255,0.05)';
+                el.textContent = '✓ ' + t.title;
+                eveningList.appendChild(el);
+            });
+        }
+    }
+
+    const btnClearEvening = document.getElementById('btn-clear-evening');
+    if (btnClearEvening) {
+        btnClearEvening.addEventListener('click', () => {
+            localStorage.removeItem('quiora_completed_today');
+            renderEveningList();
+            showToast('Mente svuotata. Ben riposo.');
+        });
+    }
+
     // --- Context & External Data ---
     async function initWeatherAndTime() {
         // 1. Check time: After 20:00
         const now = new Date();
         const isNight = now.getHours() >= 20 || now.getHours() < 6;
         currentContext.isNight = isNight;
+
+        const isEvening = now.getHours() >= 20;
+        const timeNormal = document.getElementById('time-normal-content');
+        const timeEvening = document.getElementById('time-evening-content');
+
+        if (timeNormal && timeEvening) {
+            if (isEvening) {
+                timeNormal.classList.add('hidden');
+                timeEvening.classList.remove('hidden');
+                renderEveningList();
+            } else {
+                timeNormal.classList.remove('hidden');
+                timeEvening.classList.add('hidden');
+            }
+        }
 
         // 2. Local weather via Open-Meteo
         if ('geolocation' in navigator) {
@@ -297,11 +349,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const selectedTimeIndex = parseInt(timeSlider.value, 10);
         const maxTime = timeMapping[selectedTimeIndex];
 
+        const selectedEnergyNode = document.querySelector('input[name="focus-energy"]:checked');
+        const selectedEnergy = selectedEnergyNode ? selectedEnergyNode.value : 'medio';
+
         // Evaluate tasks based on time capacity and weather context
         filteredTasks = tasks.filter(task => {
             // Time check: only allow tasks less than or equal to maxTime. 
             // If task has Infinity duration, it's allowed. If sliding selection is Infinity (index 4), maxTime becomes Infinity -> allowed.
             if (task.duration > maxTime && task.duration !== Infinity) return false;
+
+            // Energy check
+            const taskEnergy = task.energy || 'medio';
+            if (selectedEnergy === 'basso' && taskEnergy !== 'basso') return false;
+            // Medio accetta basso o medio
+            if (selectedEnergy === 'medio' && taskEnergy === 'alto') return false;
 
             // Context check (Night or Raining -> no outdoor tasks)
             const hasOutdoorTag = task.tags.some(t => ['outdoor', 'draussen', 'fuori', 'esterno'].includes(t));
@@ -345,10 +406,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Task Actions
     btnDone.addEventListener('click', () => {
+        if ('vibrate' in navigator) navigator.vibrate([15, 50, 15]);
+
         if (currentTaskIndex > -1) {
+            const completedToday = JSON.parse(localStorage.getItem('quiora_completed_today')) || [];
+            completedToday.push({
+                ...tasks[currentTaskIndex],
+                completedAt: new Date().toISOString()
+            });
+            localStorage.setItem('quiora_completed_today', JSON.stringify(completedToday));
+
             tasks.splice(currentTaskIndex, 1);
             saveTasks();
         }
+
+        // Re-check context in case it's now > 20:00
+        const isEvening = new Date().getHours() >= 20;
+        if (isEvening) {
+            document.getElementById('time-normal-content').classList.add('hidden');
+            document.getElementById('time-evening-content').classList.remove('hidden');
+            renderEveningList();
+        }
+
         // Fade out to main view
         switchView(viewTime);
     });
