@@ -1,4 +1,4 @@
-const CACHE_NAME = 'qui-e-ora-v1';
+const CACHE_NAME = 'qui-e-ora-v2';
 
 // Files to cache for offline use
 const ASSETS_TO_CACHE = [
@@ -7,8 +7,8 @@ const ASSETS_TO_CACHE = [
     './style.css',
     './app.js',
     './manifest.json',
-    './icon-192.png',
-    './icon-512.png',
+    './app-icon.png',
+    'https://cdn-icons-png.flaticon.com/512/3106/3106856.png',
     'https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap'
 ];
 
