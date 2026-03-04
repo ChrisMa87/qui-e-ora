@@ -38,9 +38,13 @@ body {
     width: 100%;
     max-width: 600px;
     height: 100vh;
+    /* Use true viewport height for mobile devices to handle the address bar */
+    height: 100dvh;
     position: relative;
     z-index: 1;
-    /* Above glow */
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Ambient Background Elements */
@@ -109,10 +113,13 @@ body {
     display: flex;
     flex-direction: column;
     padding: 2rem;
+    padding-bottom: constant(safe-area-inset-bottom);
+    /* iOS safe area */
+    padding-bottom: env(safe-area-inset-bottom);
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transition: opacity var(--transition-speed) ease,
+    transition: opacity var(--transition-speed) cubic-bezier(0.23, 1, 0.32, 1),
         visibility var(--transition-speed);
     z-index: 10;
 }
@@ -129,6 +136,8 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
+    /* ensures horizontal centering */
     width: 100%;
 }
 
@@ -138,8 +147,10 @@ body {
 }
 
 .align-start {
-    justify-content: flex-start;
-    padding-top: 20vh;
+    justify-content: center;
+    /* Center vertically instead of pushing top */
+    margin-top: -10vh;
+    /* slightly bump up visually */
 }
 
 .title-text {
