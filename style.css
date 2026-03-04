@@ -1,13 +1,19 @@
 :root {
-    --bg-color: #000000;
-    --text-primary: #F8F8F0;
-    --text-secondary: #78716C;
+    --bg-color: #050505;
+    --obsidian: #0f0f0f;
+    --obsidian-light: #1a1a1a;
+    --gold: #C5A059;
+    --gold-glow: rgba(197, 160, 89, 0.3);
+    --gold-dim: rgba(197, 160, 89, 0.1);
+    --text-primary: #e0e0e0;
+    --text-secondary: #707070;
     --accent-color: #C5A059;
-    --accent-hover: #D4AF37;
+    --accent-hover: #e0bb71;
     --accent-faded: rgba(197, 160, 89, 0.15);
     --white: #111111;
     --transition-speed: 0.6s;
-    --font-main: 'Outfit', sans-serif;
+    --font-main: 'Inter', sans-serif;
+    --font-mono: 'Space Mono', monospace;
 }
 
 * {
@@ -33,6 +39,20 @@ body {
     max-width: 600px;
     height: 100vh;
     position: relative;
+    z-index: 1;
+    /* Above glow */
+}
+
+/* Ambient Background Elements */
+.ambient-glow {
+    position: absolute;
+    width: 60vh;
+    height: 60vh;
+    background: radial-gradient(circle, var(--gold-dim) 0%, transparent 70%);
+    top: -20vh;
+    right: -10vw;
+    z-index: 0;
+    pointer-events: none;
 }
 
 .view {
@@ -78,9 +98,13 @@ body {
 }
 
 .title-text {
-    font-size: 2.5rem;
-    font-weight: 300;
-    letter-spacing: -0.02em;
+    font-size: 3.5rem;
+    font-weight: 800;
+    letter-spacing: -2px;
+    background: linear-gradient(to bottom, #fff, #666);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
     margin-bottom: 4rem;
 }
 
@@ -142,6 +166,7 @@ input[type=range]::-webkit-slider-thumb:hover {
     justify-content: space-between;
     margin-top: 1rem;
     color: var(--text-secondary);
+    font-family: var(--font-mono);
     font-size: 0.9rem;
 }
 
@@ -158,42 +183,36 @@ button {
 }
 
 .btn-primary {
-    background-color: rgba(197, 160, 89, 0.15);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    color: var(--accent-color);
+    background: var(--gold);
+    color: #000;
     padding: 1rem 3rem;
     border-radius: 999px;
     font-size: 1.1rem;
-    font-weight: 500;
+    font-weight: 800;
     letter-spacing: 0.05em;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 10px 30px var(--gold-glow);
     transition: all 0.3s ease;
-    border: 1px solid rgba(197, 160, 89, 0.2);
+    border: none;
 }
 
 .btn-primary:hover {
-    background-color: var(--accent-hover);
-    color: #000000;
-    transform: translateY(-2px);
-    box-shadow: 0 12px 28px rgba(197, 160, 89, 0.3);
-    border-color: transparent;
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px var(--gold-glow);
+    filter: brightness(1.1);
 }
 
 .btn-secondary {
     color: var(--text-secondary);
     padding: 1rem 2rem;
     font-size: 1.1rem;
-    transition: all 0.3s ease;
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    background: transparent;
+    border: none;
     border-radius: 999px;
 }
 
 .btn-secondary:hover {
-    color: var(--text-primary);
+    color: var(--gold);
 }
 
 .mt-4 {
@@ -207,22 +226,21 @@ button {
     width: 56px;
     height: 56px;
     border-radius: 50%;
-    background-color: rgba(197, 160, 89, 0.15);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(197, 160, 89, 0.2);
-    color: var(--accent-color);
+    background-color: var(--gold);
+    border: 1px solid var(--gold-dim);
+    color: #000;
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 10px 30px var(--gold-glow);
     z-index: 100;
-    transition: all 0.3s ease, opacity 0.3s ease, visibility 0.3s;
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.3s ease, visibility 0.3s;
 }
 
 .fab:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    transform: scale(1.1);
+    box-shadow: 0 15px 40px var(--gold-glow);
+    filter: brightness(1.1);
 }
 
 .top-left-btn {
@@ -246,7 +264,12 @@ button {
 /* Focus view */
 .task-title {
     font-size: 3rem;
-    font-weight: 300;
+    font-weight: 800;
+    letter-spacing: -2px;
+    background: linear-gradient(to bottom, #fff, #666);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
     line-height: 1.2;
     margin-bottom: 2rem;
 }
@@ -259,12 +282,14 @@ button {
 }
 
 .badge {
-    background-color: var(--white);
-    color: var(--text-secondary);
-    padding: 0.5rem 1rem;
-    border-radius: 999px;
-    font-size: 0.85rem;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    padding: 4px 12px;
+    border: 1px solid var(--gold-dim);
+    background-color: transparent;
+    color: var(--accent-color);
+    border-radius: 100px;
+    text-transform: uppercase;
 }
 
 .action-buttons {
@@ -293,8 +318,14 @@ button {
 }
 
 .dump-title {
-    font-size: 1.8rem;
-    margin-bottom: 1.5rem;
+    font-size: 2.5rem;
+    font-weight: 800;
+    letter-spacing: -1px;
+    background: linear-gradient(to bottom, #fff, #666);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 2rem;
 }
 
 .toast {
@@ -323,8 +354,8 @@ button {
 /* Animations - Initial loading states combined with transition class based orchestration */
 .fade-up {
     opacity: 0;
-    transform: translateY(15px);
-    transition: opacity 0.8s ease, transform 0.8s ease;
+    transform: translateY(20px);
+    transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1), transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 .view.active .fade-up {
@@ -426,17 +457,24 @@ input:checked+.slider.round:before {
 .list-item {
     position: relative;
     width: 100%;
-    background-color: var(--white);
+    background: linear-gradient(145deg, var(--obsidian-light), var(--obsidian));
     padding: 1.5rem;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    border: none;
+    border-left: 4px solid var(--accent-color);
     z-index: 2;
-    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
     display: flex;
     justify-content: space-between;
     align-items: center;
     touch-action: pan-y;
+}
+
+.list-item:hover {
+    transform: scale(1.02) translateX(10px);
+    background: linear-gradient(145deg, #222, var(--obsidian));
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 20px var(--gold-dim);
 }
 
 .list-item.swiping {
@@ -455,6 +493,7 @@ input:checked+.slider.round:before {
     display: flex;
     gap: 0.5rem;
     margin-top: 0.5rem;
+    font-family: var(--font-mono);
 }
 
 /* Energy Pills */
@@ -476,9 +515,10 @@ input:checked+.slider.round:before {
 }
 
 .energy-pill input:checked+span {
-    background: rgba(197, 160, 89, 0.15);
-    border-color: var(--accent-color);
-    color: var(--accent-color);
+    background: transparent;
+    border-color: var(--gold);
+    color: var(--gold);
+    box-shadow: 0 0 15px var(--gold-glow);
 }
 
 /* --- Mobile Optimizations --- */

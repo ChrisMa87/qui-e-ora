@@ -1,4 +1,4 @@
-const CACHE_NAME = 'qui-e-ora-v2';
+const CACHE_NAME = 'qui-e-ora-v3';
 
 // Files to cache for offline use
 const ASSETS_TO_CACHE = [
@@ -9,7 +9,7 @@ const ASSETS_TO_CACHE = [
     './manifest.json',
     './app-icon.png',
     'https://cdn-icons-png.flaticon.com/512/3106/3106856.png',
-    'https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap'
+    'https://fonts.googleapis.com/css2?family=Inter:wght@300;600;800&family=Space+Mono&display=swap'
 ];
 
 // Install event: cache assets
