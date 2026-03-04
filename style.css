@@ -278,7 +278,7 @@ button {
     width: 100%;
     border: none;
     background: transparent;
-    font-size: 2rem;
+    font-size: 1.8rem;
     font-weight: 300;
     color: var(--text-primary);
     border-bottom: 1px solid var(--accent-faded);
@@ -293,8 +293,8 @@ button {
 }
 
 .dump-title {
-    font-size: 2rem;
-    margin-bottom: 2rem;
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
 }
 
 .toast {
@@ -479,4 +479,55 @@ input:checked+.slider.round:before {
     background: rgba(197, 160, 89, 0.15);
     border-color: var(--accent-color);
     color: var(--accent-color);
+}
+
+/* --- Mobile Optimizations --- */
+@media (max-width: 450px),
+(max-height: 750px) {
+    .title-text {
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .dump-title {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .minimal-input {
+        font-size: 1.5rem;
+        padding: 0.2rem 0;
+    }
+
+    .slider-container {
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+    }
+
+    input[type=range] {
+        margin: 5px 0;
+    }
+
+    .slider-labels {
+        font-size: 0.8rem;
+    }
+
+    .btn-primary {
+        padding: 0.8rem 2.5rem;
+        font-size: 1rem;
+    }
+
+    .btn-secondary {
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+    }
+
+    .top-left-btn {
+        top: 1rem;
+        left: 1rem;
+    }
+
+    .content-wrapper {
+        padding: 1.5rem;
+    }
 }
