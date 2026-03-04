@@ -62,6 +62,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const toast = document.getElementById('toast');
 
+    // --- Ambient Particles Logic ---
+    function spawnDustParticle() {
+        if (document.hidden) return; // Don't spawn when tab is inactive
+
+        const particle = document.createElement('div');
+        particle.classList.add('dust-particle');
+
+        // Randomize size between 2px and 5px
+        const size = Math.random() * 3 + 2;
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+
+        // Randomize horizontal position (anywhere across the screen)
+        particle.style.left = `${Math.random() * 100}vw`;
+
+        // Start near the bottom or middle
+        particle.style.top = `${Math.random() * 50 + 50}vh`;
+
+        // Randomize animation duration between 8s and 15s
+        const duration = Math.random() * 7 + 8;
+        particle.style.animationDuration = `${duration}s`;
+
+        document.body.appendChild(particle);
+
+        // Remove the particle from DOM after its animation finishes
+        setTimeout(() => {
+            particle.remove();
+        }, duration * 1000);
+    }
+
+    // Spawn a particle every 800ms
+    setInterval(spawnDustParticle, 800);
+
+    // Spawn some initial particles
+    for (let i = 0; i < 10; i++) {
+        setTimeout(spawnDustParticle, Math.random() * 2000);
+    }
+
     // --- Initial Setup ---
     initWeatherAndTime();
 
