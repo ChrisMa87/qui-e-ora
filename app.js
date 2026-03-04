@@ -2,6 +2,23 @@ document.addEventListener('DOMContentLoaded', () => {
     // Config & State
     const timeMapping = [5, 15, 30, 60, Infinity]; // slider values correspond to index 0..4
     let tasks = JSON.parse(localStorage.getItem('quiora_tasks')) || [];
+
+    // Persistent Default Task
+    const persistentJoggenTask = {
+        id: 'persistent-joggen',
+        title: 'Joggen',
+        duration: 30,
+        tags: ['outdoor', 'allaperto'],
+        energy: 'alto',
+        isPersistent: true
+    };
+
+    // Ensure persistent task always exists
+    if (!tasks.find(t => t.id === 'persistent-joggen')) {
+        tasks.push(persistentJoggenTask);
+        localStorage.setItem('quiora_tasks', JSON.stringify(tasks));
+    }
+
     let currentContext = { isRaining: false, isNight: false };
     let currentTaskIndex = -1;
     let filteredTasks = [];
@@ -179,6 +196,15 @@ document.addEventListener('DOMContentLoaded', () => {
             const item = document.createElement('div');
             item.className = 'list-item';
 
+            // Disable swipe if persistent
+            if (task.isPersistent) {
+                item.classList.add('persistent-item');
+                bg.textContent = 'Fisso'; // Change background text to indicate it's fixed
+                bg.style.color = 'var(--text-secondary)';
+                bg.style.justifyContent = 'center';
+                wrapper.style.backgroundColor = 'transparent';
+            }
+
             let tagsHtml = '';
             if (task.tags && task.tags.length > 0) {
                 tagsHtml = `<span style="color: var(--text-primary); border: 1px solid var(--accent-faded); padding: 2px 8px; border-radius: 999px; font-size: 0.8rem;">#${task.tags.join(' #')}</span>`;
@@ -227,8 +253,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 isSwiping = false;
                 item.classList.remove('swiping');
 
-                // If swiped more than 100px left, delete
-                if (currentX < -100) {
+                // If swiped more than 100px left, delete (unless persistent)
+                if (currentX < -100 && !task.isPersistent) {
                     item.style.transform = `translateX(-100%)`; // Slide completely out
 
                     // Remove from array and DOM
@@ -245,6 +271,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     // Reset position
                     item.style.transform = `translateX(0)`;
+                    if (task.isPersistent && currentX < -50) {
+                        showToast('Questa attività di base non può essere eliminata.');
+                    }
                 }
             });
         });
@@ -416,8 +445,10 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             localStorage.setItem('quiora_completed_today', JSON.stringify(completedToday));
 
-            tasks.splice(currentTaskIndex, 1);
-            saveTasks();
+            if (!tasks[currentTaskIndex].isPersistent) {
+                tasks.splice(currentTaskIndex, 1);
+                saveTasks();
+            }
         }
 
         // Re-check context in case it's now > 20:00
